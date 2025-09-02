@@ -1,4 +1,6 @@
 using Xunit;
+using CarWashProcessor.Services.CarWashServices;
+using CarWashProcessor.Services.AddOnServices;
 using CarWashProcessor.Services;
 using CarWashProcessor.Models;
 using NSubstitute;
@@ -27,13 +29,21 @@ namespace CarWashProcessor.Tests.Tests
             _interiorCleanLogger = Substitute.For<ILogger<InteriorCleanService>>();
             _handWaxLogger = Substitute.For<ILogger<HandWaxAndShineService>>();
 
-            _processor = new CarJobProcessorService(
+            var carWashFactory = new CarWashServiceFactory(
                 new BasicWashService(_basicWashLogger),
                 new AwesomeWashService(_awesomeWashLogger),
-                new ToTheMaxWashService(_toTheMaxWashLogger),
+                new ToTheMaxWashService(_toTheMaxWashLogger)
+            );
+
+            var addOnServiceFactory = new AddOnServiceFactory(
                 new TireShineService(_tireShineLogger),
                 new InteriorCleanService(_interiorCleanLogger),
-                new HandWaxAndShineService(_handWaxLogger));
+                new HandWaxAndShineService(_handWaxLogger)
+            );
+            _processor = new CarJobProcessorService(
+                carWashFactory,
+                addOnServiceFactory
+            );
         }
 
 

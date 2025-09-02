@@ -1,4 +1,6 @@
 using CarWashProcessor.Services;
+using CarWashProcessor.Services.AddOnServices;
+using CarWashProcessor.Services.CarWashServices;
 
 namespace CarWashProcessor;
 
@@ -22,12 +24,26 @@ public class Program
 	private static void _RegisterServices(IServiceCollection services)
 	{
 		// Register services
+		_AddCarWashServices(services);
+		_AddAddOnServices(services);
+	}
+
+	private static void _AddCarWashServices(IServiceCollection services)
+	{
 		services.AddSingleton<CarJobProcessorService>();
 		services.AddSingleton<BasicWashService>();
 		services.AddSingleton<AwesomeWashService>();
 		services.AddSingleton<ToTheMaxWashService>();
+
+		services.AddSingleton<CarWashServiceFactory>();
+	}
+
+	private static void _AddAddOnServices(IServiceCollection services)
+	{
 		services.AddSingleton<TireShineService>();
 		services.AddSingleton<InteriorCleanService>();
 		services.AddSingleton<HandWaxAndShineService>();
+
+		services.AddSingleton<AddOnServiceFactory>();
 	}
 }
