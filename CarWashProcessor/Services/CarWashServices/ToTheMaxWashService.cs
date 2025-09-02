@@ -1,6 +1,6 @@
 ﻿using CarWashProcessor.Models;
 
-namespace CarWashProcessor.Services;
+namespace CarWashProcessor.Services.CarWashServices;
 
 public class ToTheMaxWashService : ICarWashService
 {
