@@ -34,11 +34,16 @@ namespace CarWashProcessor.Tests.Tests
                 new AwesomeWashService(_awesomeWashLogger),
                 new ToTheMaxWashService(_toTheMaxWashLogger)
             );
-            _processor = new CarJobProcessorService(
-                carWashFactory,
+
+            var addOnServiceFactory = new AddOnServiceFactory(
                 new TireShineService(_tireShineLogger),
                 new InteriorCleanService(_interiorCleanLogger),
-                new HandWaxAndShineService(_handWaxLogger));
+                new HandWaxAndShineService(_handWaxLogger)
+            );
+            _processor = new CarJobProcessorService(
+                carWashFactory,
+                addOnServiceFactory
+            );
         }
 
 
