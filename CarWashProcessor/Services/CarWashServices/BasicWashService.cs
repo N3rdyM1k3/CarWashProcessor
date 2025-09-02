@@ -2,7 +2,7 @@
 
 namespace CarWashProcessor.Services;
 
-public class BasicWashService
+public class BasicWashService : ICarWashService
 {
 	private readonly ILogger<BasicWashService> _logger;
 
@@ -12,7 +12,12 @@ public class BasicWashService
 		_logger = logger;
 	}
 
-	public async Task DoBasicWashAsync(CarJob carJob)
+	public async Task DoWash(CarJob carJob)
+	{
+		await doBasicWashAsync(carJob);
+	}
+
+	private async Task doBasicWashAsync(CarJob carJob)
 	{
 		// Wait a second
 		await Task.Delay(TimeSpan.FromSeconds(1));

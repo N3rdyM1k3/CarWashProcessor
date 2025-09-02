@@ -2,7 +2,7 @@
 
 namespace CarWashProcessor.Services;
 
-public class ToTheMaxWashService
+public class ToTheMaxWashService : ICarWashService
 {
 	private readonly ILogger<ToTheMaxWashService> _logger;
 
@@ -12,7 +12,12 @@ public class ToTheMaxWashService
 		_logger = logger;
 	}
 
-	public async Task DoToTheMaxWashAsync(CarJob carJob)
+	public async Task DoWash(CarJob carJob)
+	{
+		await doToTheMaxWashAsync(carJob);
+	}
+
+	private async Task doToTheMaxWashAsync(CarJob carJob)
 	{
 		// Wait a second
 		await Task.Delay(TimeSpan.FromSeconds(1));
