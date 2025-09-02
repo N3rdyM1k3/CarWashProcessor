@@ -7,26 +7,20 @@ namespace CarWashProcessor.Services;
 
 public class CarJobProcessorService
 {
-	private readonly BasicWashService _basicWashService;
-	private readonly AwesomeWashService _awesomeWashService;
-	private readonly ToTheMaxWashService _toTheMaxWashService;
+	private readonly CarWashServiceFactory _carWashServiceFactory;
 	private readonly TireShineService _tireShineService;
 	private readonly InteriorCleanService _interiorCleanService;
 	private readonly HandWaxAndShineService _handWaxAndShineService;
 
 	public CarJobProcessorService(
-		BasicWashService basicWashService,
-		AwesomeWashService awesomeWashService,
-		ToTheMaxWashService toTheMaxWashService,
+		CarWashServiceFactory carWashServiceFactory,
 		TireShineService tireShineService,
 		InteriorCleanService interiorCleanService,
 		HandWaxAndShineService handWaxAndShineService
 	)
 	{
 		// Set services
-		_basicWashService = basicWashService;
-		_awesomeWashService = awesomeWashService;
-		_toTheMaxWashService = toTheMaxWashService;
+		_carWashServiceFactory = carWashServiceFactory;
 		_tireShineService = tireShineService;
 		_interiorCleanService = interiorCleanService;
 		_handWaxAndShineService = handWaxAndShineService;
@@ -34,7 +28,8 @@ public class CarJobProcessorService
 
 	public async Task ProcessCarJobAsync(CarJob carJob)
 	{
-		var washService = getWashService(carJob.ServiceWash);
+		var washService = _carWashServiceFactory.GetWashService(carJob.ServiceWash);
+		// Do the wash	
 		await washService.DoWash(carJob);
 		foreach (var addOnService in getAddOnService(carJob.ServiceAddons))
 		{
@@ -43,18 +38,6 @@ public class CarJobProcessorService
 
 		
 	}
-
-	// TODO: Eventually move to a factory pattern. 
-	private ICarWashService getWashService(EServiceWash serviceWash) =>
-		serviceWash switch
-		{
-			EServiceWash.Basic => _basicWashService,
-			EServiceWash.Awesome => _awesomeWashService,
-			EServiceWash.ToTheMax => _toTheMaxWashService,
-			_ => throw new InvalidOperationException(
-				$"Wash service ({serviceWash}) not recognized."
-			),
-		};
 
 	private IEnumerable<IAddOnService> getAddOnService(ImmutableArray<EServiceAddon> serviceAddons)
 	{
