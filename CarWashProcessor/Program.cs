@@ -25,9 +25,7 @@ public class Program
 	{
 		// Register services
 		_AddCarWashServices(services);
-		services.AddSingleton<TireShineService>();
-		services.AddSingleton<InteriorCleanService>();
-		services.AddSingleton<HandWaxAndShineService>();
+		_AddAddOnServices(services);
 	}
 
 	private static void _AddCarWashServices(IServiceCollection services)
@@ -38,5 +36,14 @@ public class Program
 		services.AddSingleton<ToTheMaxWashService>();
 
 		services.AddSingleton<CarWashServiceFactory>();
+	}
+
+	private static void _AddAddOnServices(IServiceCollection services)
+	{
+		services.AddSingleton<TireShineService>();
+		services.AddSingleton<InteriorCleanService>();
+		services.AddSingleton<HandWaxAndShineService>();
+
+		services.AddSingleton<AddOnServiceFactory>();
 	}
 }
