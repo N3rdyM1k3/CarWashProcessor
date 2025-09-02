@@ -31,27 +31,9 @@ public class CarJobProcessorService
 
 	public async Task ProcessCarJobAsync(CarJob carJob)
 	{
-		// Check if wash service
-		switch (carJob.ServiceWash)
-		{
-			case EServiceWash.Basic:
-				// Do basic wash
-				await _basicWashService.DoBasicWashAsync(carJob);
-				break;
-			case EServiceWash.Awesome:
-				// Do awesome wash
-				await _awesomeWashService.DoAwesomeWashAsync(carJob);
-				break;
-			case EServiceWash.ToTheMax:
-				// Do to the max wash
-				await _toTheMaxWashService.DoToTheMaxWashAsync(carJob);
-				break;
-			default:
-				// Throw error
-				throw new InvalidOperationException(
-					$"Wash service ({carJob.ServiceWash}) not recognized."
-				);
-		}
+		var washService = getWashService(carJob.ServiceWash);
+		await washService.DoWash(carJob);
+		
 		// Check if tire shine
 		if (carJob.ServiceAddons.Contains(EServiceAddon.TireShine))
 		{
@@ -71,4 +53,16 @@ public class CarJobProcessorService
 			await _handWaxAndShineService.HandWaxAndShineAsync(carJob);
 		}
 	}
+
+	// TODO: Eventually move to a factory pattern. 
+	private ICarWashService getWashService(EServiceWash serviceWash) =>
+		serviceWash switch
+		{
+			EServiceWash.Basic => _basicWashService,
+			EServiceWash.Awesome => _awesomeWashService,
+			EServiceWash.ToTheMax => _toTheMaxWashService,
+			_ => throw new InvalidOperationException(
+				$"Wash service ({serviceWash}) not recognized."
+			),
+		};
 }
