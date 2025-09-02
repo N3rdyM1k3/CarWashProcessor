@@ -2,7 +2,7 @@
 
 namespace CarWashProcessor.Services;
 
-public class TireShineService
+public class TireShineService : IAddOnService
 {
 	private readonly ILogger<TireShineService> _logger;
 
@@ -12,7 +12,12 @@ public class TireShineService
 		_logger = logger;
 	}
 
-	public async Task ShineTiresAsync(CarJob carJob)
+	public async Task DoAddOn(CarJob carJob)
+	{
+		await shineTiresAsync(carJob);
+	}
+
+	private async Task shineTiresAsync(CarJob carJob)
 	{
 		// Wait a second
 		await Task.Delay(TimeSpan.FromSeconds(1));

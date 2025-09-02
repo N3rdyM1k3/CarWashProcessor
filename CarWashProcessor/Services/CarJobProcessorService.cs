@@ -1,4 +1,5 @@
-﻿using CarWashProcessor.Models;
+﻿using System.Collections.Immutable;
+using CarWashProcessor.Models;
 
 namespace CarWashProcessor.Services;
 
@@ -33,25 +34,12 @@ public class CarJobProcessorService
 	{
 		var washService = getWashService(carJob.ServiceWash);
 		await washService.DoWash(carJob);
+		foreach (var addOnService in getAddOnService(carJob.ServiceAddons))
+		{
+			await addOnService.DoAddOn(carJob);
+		}
+
 		
-		// Check if tire shine
-		if (carJob.ServiceAddons.Contains(EServiceAddon.TireShine))
-		{
-			// Shine tires
-			await _tireShineService.ShineTiresAsync(carJob);
-		}
-		// Check if interior clean
-		if (carJob.ServiceAddons.Contains(EServiceAddon.InteriorClean))
-		{
-			// Clean interior
-			await _interiorCleanService.CleanInteriorAsync(carJob);
-		}
-		// Check if hand wax and shine
-		if (carJob.ServiceAddons.Contains(EServiceAddon.HandWaxAndShine))
-		{
-			// Hand wax and shine
-			await _handWaxAndShineService.HandWaxAndShineAsync(carJob);
-		}
 	}
 
 	// TODO: Eventually move to a factory pattern. 
@@ -65,4 +53,29 @@ public class CarJobProcessorService
 				$"Wash service ({serviceWash}) not recognized."
 			),
 		};
+
+	private IEnumerable<IAddOnService> getAddOnService(ImmutableArray<EServiceAddon> serviceAddons)
+	{
+
+		// Check if tire shine
+		if (serviceAddons.Contains(EServiceAddon.TireShine))
+		{
+			// Shine tires
+			yield return _tireShineService;
+		}
+		// Check if interior clean
+		if (serviceAddons.Contains(EServiceAddon.InteriorClean))
+		{
+			// Clean interior
+			yield return _interiorCleanService;
+		}
+		// Check if hand wax and shine
+		if (serviceAddons.Contains(EServiceAddon.HandWaxAndShine))
+		{
+			// Hand wax and shine
+			yield return _handWaxAndShineService;
+		}
+
+		yield break;
+	}
 }

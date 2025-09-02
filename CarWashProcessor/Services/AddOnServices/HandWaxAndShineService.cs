@@ -2,7 +2,7 @@
 
 namespace CarWashProcessor.Services;
 
-public class HandWaxAndShineService
+public class HandWaxAndShineService : IAddOnService
 {
 	private readonly ILogger<HandWaxAndShineService> _logger;
 
@@ -12,7 +12,12 @@ public class HandWaxAndShineService
 		_logger = logger;
 	}
 
-	public async Task HandWaxAndShineAsync(CarJob carJob)
+	public async Task DoAddOn(CarJob carJob)
+	{
+		await handWaxAndShineAsync(carJob);
+	}
+
+	private async Task handWaxAndShineAsync(CarJob carJob)
 	{
 		// Wait a second
 		await Task.Delay(TimeSpan.FromSeconds(1));
