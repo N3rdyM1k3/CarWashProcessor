@@ -35,7 +35,7 @@ public class Program
 		services.AddSingleton<AwesomeWashService>();
 		services.AddSingleton<ToTheMaxWashService>();
 
-		services.AddSingleton<CarWashServiceFactory>();
+		services.AddSingleton<CarWashProcessorService>();
 	}
 
 	private static void _AddAddOnServices(IServiceCollection services)
@@ -44,6 +44,6 @@ public class Program
 		services.AddSingleton<InteriorCleanService>();
 		services.AddSingleton<HandWaxAndShineService>();
 
-		services.AddSingleton<AddOnServiceFactory>();
+		services.AddSingleton<AddOnProcessorService>();
 	}
 }
