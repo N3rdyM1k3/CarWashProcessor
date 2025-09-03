@@ -35,7 +35,8 @@ public class AddOnProcessorService : ICarJobProcessorService
             switch(addon)
             {
                 case EServiceAddon.TireShine:
-                    // NOTE: yield return is probably, possibly overkill. 
+                    // NOTE: yield return allows for scale and flexibility not 
+                    //       currently needed w.r.t. async nature of services
                     yield return _tireShineService;
                     break;
                 case EServiceAddon.InteriorClean:
