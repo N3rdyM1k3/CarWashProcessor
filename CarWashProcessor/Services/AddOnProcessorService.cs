@@ -6,18 +6,19 @@ namespace CarWashProcessor.Services;
 
 public class AddOnProcessorService : ICarJobProcessorService
 {
-    private readonly IAddOnService _tireShineService;
-    private readonly IAddOnService _interiorCleanService;
-    private readonly IAddOnService _handWaxAndShineService;
+    private readonly Dictionary<EServiceAddon, IAddOnService> _addOnServiceProvider;
 
     public AddOnProcessorService(
         TireShineService tireShineService,
         InteriorCleanService interiorCleanService,
         HandWaxAndShineService handWaxAndShineService)
     {
-        _tireShineService = tireShineService;
-        _interiorCleanService = interiorCleanService;
-        _handWaxAndShineService = handWaxAndShineService;
+        _addOnServiceProvider = new Dictionary<EServiceAddon, IAddOnService>
+        {
+            { EServiceAddon.TireShine, tireShineService },
+            { EServiceAddon.InteriorClean, interiorCleanService },
+            { EServiceAddon.HandWaxAndShine, handWaxAndShineService }
+        };
     }
 
     public async Task ProcessCarJobAsync(CarJob carJob)
@@ -32,21 +33,13 @@ public class AddOnProcessorService : ICarJobProcessorService
     {
         foreach(var addon in serviceAddons)
         {
-            switch(addon)
+            if (_addOnServiceProvider.TryGetValue(addon, out var service))
             {
-                case EServiceAddon.TireShine:
-                    // NOTE: yield return allows for scale and flexibility not 
-                    //       currently needed w.r.t. async nature of services
-                    yield return _tireShineService;
-                    break;
-                case EServiceAddon.InteriorClean:
-                    yield return _interiorCleanService;
-                    break;
-                case EServiceAddon.HandWaxAndShine:
-                    yield return _handWaxAndShineService;
-                    break;
-                default:
-                    throw new InvalidOperationException($"Add-on service ({addon}) not recognized.");
+                yield return service;
+            }
+            else
+            {
+                throw new InvalidOperationException($"Add-on service ({addon}) not recognized.");
             }
         }
     }

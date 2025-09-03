@@ -5,18 +5,19 @@ namespace CarWashProcessor.Services;
 
 public class CarWashProcessorService : ICarJobProcessorService
 {
-    private readonly ICarWashService _basicWashService;
-    private readonly ICarWashService _awesomeWashService;
-    private readonly ICarWashService _toTheMaxWashService;
+    private readonly Dictionary<EServiceWash, ICarWashService> _washServiceProvider;
 
     public CarWashProcessorService(
         BasicWashService basicWashService,
         AwesomeWashService awesomeWashService,
         ToTheMaxWashService toTheMaxWashService)
     {
-        _basicWashService = basicWashService;
-        _awesomeWashService = awesomeWashService;
-        _toTheMaxWashService = toTheMaxWashService;
+        _washServiceProvider = new Dictionary<EServiceWash, ICarWashService>
+        {
+            { EServiceWash.Basic, basicWashService },
+            { EServiceWash.Awesome, awesomeWashService },
+            { EServiceWash.ToTheMax, toTheMaxWashService }
+        };
     }
 
     public async Task ProcessCarJobAsync(CarJob carJob)
@@ -25,14 +26,15 @@ public class CarWashProcessorService : ICarJobProcessorService
         await washService.DoWash(carJob);
     }
 
-    private ICarWashService getWashService(EServiceWash serviceWash) =>
-        serviceWash switch
+    private ICarWashService getWashService(EServiceWash serviceWash)
+    {
+        if (_washServiceProvider.TryGetValue(serviceWash, out var service))
         {
-            EServiceWash.Basic => _basicWashService,
-            EServiceWash.Awesome => _awesomeWashService,
-            EServiceWash.ToTheMax => _toTheMaxWashService,
-            _ => throw new InvalidOperationException(
-                $"Wash service ({serviceWash}) not recognized."
-            ),
-        };
+            return service;
+        }
+        
+        throw new InvalidOperationException(
+            $"Wash service ({serviceWash}) not recognized."
+        );
+    }
 }
