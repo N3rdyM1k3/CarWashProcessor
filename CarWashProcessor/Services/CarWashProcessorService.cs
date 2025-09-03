@@ -5,9 +5,9 @@ namespace CarWashProcessor.Services;
 
 public class CarWashProcessorService : ICarJobProcessorService
 {
-    private readonly BasicWashService _basicWashService;
-    private readonly AwesomeWashService _awesomeWashService;
-    private readonly ToTheMaxWashService _toTheMaxWashService;
+    private readonly ICarWashService _basicWashService;
+    private readonly ICarWashService _awesomeWashService;
+    private readonly ICarWashService _toTheMaxWashService;
 
     public CarWashProcessorService(
         BasicWashService basicWashService,

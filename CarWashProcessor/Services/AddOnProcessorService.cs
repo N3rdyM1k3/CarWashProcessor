@@ -6,9 +6,9 @@ namespace CarWashProcessor.Services;
 
 public class AddOnProcessorService : ICarJobProcessorService
 {
-    private readonly TireShineService _tireShineService;
-    private readonly InteriorCleanService _interiorCleanService;
-    private readonly HandWaxAndShineService _handWaxAndShineService;
+    private readonly IAddOnService _tireShineService;
+    private readonly IAddOnService _interiorCleanService;
+    private readonly IAddOnService _handWaxAndShineService;
 
     public AddOnProcessorService(
         TireShineService tireShineService,
