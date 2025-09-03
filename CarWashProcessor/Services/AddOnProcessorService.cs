@@ -30,19 +30,23 @@ public class AddOnProcessorService : ICarJobProcessorService
 
     private IEnumerable<IAddOnService> getAddOnServices(ImmutableArray<EServiceAddon> serviceAddons)
     {
-        if (serviceAddons.Contains(EServiceAddon.TireShine))
+        foreach(var addon in serviceAddons)
         {
-            yield return _tireShineService;
-        }
-        
-        if (serviceAddons.Contains(EServiceAddon.InteriorClean))
-        {
-            yield return _interiorCleanService;
-        }
-        
-        if (serviceAddons.Contains(EServiceAddon.HandWaxAndShine))
-        {
-            yield return _handWaxAndShineService;
+            switch(addon)
+            {
+                case EServiceAddon.TireShine:
+                    // NOTE: yield return is probably, possibly overkill. 
+                    yield return _tireShineService;
+                    break;
+                case EServiceAddon.InteriorClean:
+                    yield return _interiorCleanService;
+                    break;
+                case EServiceAddon.HandWaxAndShine:
+                    yield return _handWaxAndShineService;
+                    break;
+                default:
+                    throw new InvalidOperationException($"Add-on service ({addon}) not recognized.");
+            }
         }
     }
 }
