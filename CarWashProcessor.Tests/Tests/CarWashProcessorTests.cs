@@ -29,20 +29,21 @@ namespace CarWashProcessor.Tests.Tests
             _interiorCleanLogger = Substitute.For<ILogger<InteriorCleanService>>();
             _handWaxLogger = Substitute.For<ILogger<HandWaxAndShineService>>();
 
-            var carWashFactory = new CarWashServiceFactory(
+            var carWashProcessorService = new CarWashProcessorService(
                 new BasicWashService(_basicWashLogger),
                 new AwesomeWashService(_awesomeWashLogger),
                 new ToTheMaxWashService(_toTheMaxWashLogger)
             );
 
-            var addOnServiceFactory = new AddOnServiceFactory(
+            var addOnProcessorService = new AddOnProcessorService(
                 new TireShineService(_tireShineLogger),
                 new InteriorCleanService(_interiorCleanLogger),
                 new HandWaxAndShineService(_handWaxLogger)
             );
+            
             _processor = new CarJobProcessorService(
-                carWashFactory,
-                addOnServiceFactory
+                carWashProcessorService,
+                addOnProcessorService
             );
         }
 
